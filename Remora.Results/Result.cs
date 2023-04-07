@@ -170,6 +170,17 @@ public readonly struct Result<TEntity> : IResult
     }
 
     /// <summary>
+    /// Allows converting a <see cref="Result{TEntity}"/>'s undlerlying type from <typeparamref name="TEntity"/> to <typeparamref name="TResult"/>.
+    /// </summary>
+    /// <typeparam name="TResult">The starting underlying type.</typeparam>
+    /// <param name="conversion">An operation to convert the underlying types.</param>
+    /// <returns>A converted result.</returns>
+    public Result<TResult> Cast<TResult>(Func<TEntity, TResult> conversion)
+        => IsSuccess
+            ? Result<TResult>.FromSuccess(conversion(Entity))
+            : Result<TResult>.FromError(Error);
+
+    /// <summary>
     /// Creates a new successful result.
     /// </summary>
     /// <param name="entity">The returned entity.</param>
